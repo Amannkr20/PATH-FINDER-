@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathFinder Pro AI - Login</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00d4ff;
+            --secondary: #7000ff;
+            --success: #00ff88;
+            --glass-bg: rgba(10, 15, 30, 0.85);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #050510;
+            color: #e0e8ff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #0a0e27 0%, #050510 100%);
+        }
+        .starfield::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #00d4ff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(112, 0, 255, 0.8), transparent);
+            background-size: 200px 200px, 300px 300px;
+            animation: starfieldMove 80s linear infinite;
+            opacity: 0.6;
+        }
+        @keyframes starfieldMove {
+            from { transform: translateY(0); }
+            to { transform: translateY(-200px); }
+        }
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 0 1.5rem;
+        }
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .logo-icon {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, #00d4ff, #7000ff);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #7000ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: #6b7a9a;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.25rem;
+            border-radius: 12px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            color: #a0b0d0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(112, 0, 255, 0.2));
+            color: #fff;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            color: #a0b0d0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+        .form-input::placeholder {
+            color: #6b7a9a;
+        }
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #7000ff);
+            color: #fff;
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .forgot-password a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #6b7a9a;
+            font-size: 0.85rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .divider span {
+            padding: 0 1rem;
+        }
+        .demo-users {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px dashed rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        .demo-users h4 {
+            font-size: 0.9rem;
+            color: #00d4ff;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+        .demo-btn {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #a0b0d0;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .demo-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+            color: #fff;
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+        .demo-btn strong {
+            color: #00d4ff;
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .toast {
+            padding: 1rem 1.5rem;
+            background: rgba(10, 15, 30, 0.98);
+            border: 1px solid;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.4s;
+            margin-bottom: 0.75rem;
+            min-width: 280px;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success { border-color: #00ff88; }
+        .toast.error { border-color: #ff4444; }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (max-width: 480px) {
+            .glass-card { padding: 1.5rem; }
+            .logo-text { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body x-data="loginPage()" x-init="init()">
+    <div class="starfield"></div>
+
+    <div class="login-container">
+        <div class="glass-card">
+            <div class="logo-section">
+                <div class="logo-icon">&#9670;</div>
+                <div class="logo-text">PathFinder Pro</div>
+                <p class="subtitle">AI-Powered Academic Risk Assessment</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn" :class="{ 'active': activeTab === 'login' }" @click="activeTab = 'login'">Sign In</button>
+                <button class="tab-btn" :class="{ 'active': activeTab === 'register' }" @click="activeTab = 'register'">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form x-show="activeTab === 'login'" @submit.prevent="login()" style="display: none;" x-cloak>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" x-model="loginForm.email" placeholder="student@university.edu" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" x-model="loginForm.password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" :disabled="loading">
+                    <template x-if="loading">
+                        <div class="spinner"></div>
+                    </template>
+                    <template x-if="!loading">
+                        <span>Sign In</span>
+                    </template>
+                </button>
+                <div class="forgot-password">
+                    <a href="#" @click.prevent="showToast('Contact admin to reset password', 'info')">Forgot password?</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form x-show="activeTab === 'register'" @submit.prevent="register()" style="display: none;" x-cloak>
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" class="form-input" x-model="registerForm.fullName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input type="email" class="form-input" x-model="registerForm.email" placeholder="student@university.edu" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Student ID</label>
+                    <input type="text" class="form-input" x-model="registerForm.studentId" placeholder="2024001">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Degree Program *</label>
+                    <select class="form-select" x-model="registerForm.degreeType" required>
+                        <option value="btech">B.Tech</option>
+                        <option value="mtech">M.Tech</option>
+                        <option value="mba">MBA</option>
+                        <option value="bsc">B.Sc</option>
+                        <option value="msc">M.Sc</option>
+                        <option value="ba">B.A</option>
+                        <option value="ma">M.A</option>
+                        <option value="mca">MCA</option>
+                        <option value="bca">BCA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password *</label>
+                    <input type="password" class="form-input" x-model="registerForm.password" placeholder="Min 8 characters" required minlength="8">
+                </div>
+                <button type="submit" class="btn btn-primary" :disabled="loading">
+                    <template x-if="loading">
+                        <div class="spinner"></div>
+                    </template>
+                    <template x-if="!loading">
+                        <span>Create Account</span>
+                    </template>
+                </button>
+            </form>
+
+            <div class="divider"><span>OR</span></div>
+
+            <!-- Demo Users -->
+            <div class="demo-users">
+                <h4>Quick Login (Demo)</h4>
+                <button type="button" class="demo-btn" @click="demoLogin('Alex Johnson', 'alex@university.edu', 'btech')">
+                    <strong>Alex Johnson</strong> - B.Tech Student
+                </button>
+                <button type="button" class="demo-btn" @click="demoLogin('Sarah Chen', 'sarah@university.edu', 'mba')">
+                    <strong>Sarah Chen</strong> - MBA Student
+                </button>
+                <button type="button" class="demo-btn" @click="demoLogin('Mike Smith', 'mike@university.edu', 'bsc')">
+                    <strong>Mike Smith</strong> - B.Sc Student
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container">
+        <template x-for="(toast, index) in toasts" :key="index">
+            <div class="toast" :class="toast.type" x-show="toast.visible" x-transition>
+                <span x-text="toast.icon"></span>
+                <span x-text="toast.message"></span>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        function loginPage() {
+            return {
+                activeTab: 'login',
+                loading: false,
+                loginForm: { email: '', password: '' },
+                registerForm: { fullName: '', email: '', studentId: '', degreeType: 'btech', password: '' },
+                toasts: [],
+
+                init() {
+                    // Check if already logged in
+                    const session = sessionStorage.getItem('pathfinder_session');
+                    if (session) {
+                        window.location.href = 'pathfinder-pro-profile.html';
+                    }
+                },
+
+                login() {
+                    this.loading = true;
+                    setTimeout(() => {
+                        const users = JSON.parse(localStorage.getItem('pathfinder_users') || '[]');
+                        const user = users.find(u => u.email === this.loginForm.email);
+
+                        if (!user) {
+                            this.showToast('User not found. Please register.', 'error');
+                            this.loading = false;
+                            return;
+                        }
+
+                        if (user.password !== this.loginForm.password) {
+                            this.showToast('Invalid password', 'error');
+                            this.loading = false;
+                            return;
+                        }
+
+                        // Create session
+                        sessionStorage.setItem('pathfinder_session', JSON.stringify(user));
+                        this.showToast('Welcome back, ' + user.fullName + '!', 'success');
+
+                        setTimeout(() => {
+                            window.location.href = 'pathfinder-pro-profile.html';
+                        }, 800);
+                    }, 1000);
+                },
+
+                register() {
+                    this.loading = true;
+                    setTimeout(() => {
+                        const users = JSON.parse(localStorage.getItem('pathfinder_users') || '[]');
+
+                        // Check if email exists
+                        if (users.find(u => u.email === this.registerForm.email)) {
+                            this.showToast('Email already registered', 'error');
+                            this.loading = false;
+                            return;
+                        }
+
+                        // Create new user
+                        const newUser = {
+                            ...this.registerForm,
+                            phone: '',
+                            year: '1',
+                            bio: '',
+                            avatar: null,
+                            createdAt: new Date().toISOString()
+                        };
+
+                        users.push(newUser);
+                        localStorage.setItem('pathfinder_users', JSON.stringify(users));
+
+                        // Auto login
+                        sessionStorage.setItem('pathfinder_session', JSON.stringify(newUser));
+                        this.showToast('Account created successfully!', 'success');
+
+                        setTimeout(() => {
+                            window.location.href = 'pathfinder-pro-profile.html';
+                        }, 800);
+                    }, 1000);
+                },
+
+                demoLogin(name, email, degree) {
+                    this.loading = true;
+                    setTimeout(() => {
+                        const demoUser = {
+                            fullName: name,
+                            email: email,
+                            studentId: '2024' + Math.floor(Math.random() * 10000),
+                            degreeType: degree,
+                            phone: '',
+                            year: '2',
+                            bio: 'Demo student account for PathFinder Pro',
+                            avatar: null,
+                            password: 'demo123'
+                        };
+
+                        // Save to users if not exists
+                        const users = JSON.parse(localStorage.getItem('pathfinder_users') || '[]');
+                        if (!users.find(u => u.email === email)) {
+                            users.push(demoUser);
+                            localStorage.setItem('pathfinder_users', JSON.stringify(users));
+                        }
+
+                        sessionStorage.setItem('pathfinder_session', JSON.stringify(demoUser));
+                        window.location.href = 'pathfinder-pro-profile.html';
+                    }, 500);
+                },
+
+                showToast(message, type = 'success') {
+                    const icons = { success: '✓', error: '✕', info: 'ℹ' };
+                    const toast = { message, type, icon: icons[type], visible: true };
+                    this.toasts.push(toast);
+                    setTimeout(() => {
+                        toast.visible = false;
+                        setTimeout(() => this.toasts = this.toasts.filter(t => t !== toast), 400);
+                    }, 3000);
+                }
+            };
+        }
+    </script>
+</body>
+</html>
